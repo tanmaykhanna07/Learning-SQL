@@ -1,0 +1,50 @@
+Assume you are querying the live production database for your Java CLI bank.
+Your core tables are:
+
+* `customers` (`customer_id`, `name`, `email`, `phone`)
+* `accounts` (`account_id`, `customer_id`, `balance`, `account_type`)
+* `transactions` (`txn_id`, `account_id`, `amount`, `txn_type`, `status`, `created_at`)
+
+---
+
+### Phase 1: The Warm-Up (CRUD & Filtering)
+
+1. Write a query to fetch the names and emails of all customers who use a `@gmail.com` email address.
+2. The bank is discontinuing "Checking" accounts. Write the `UPDATE` statement to change all 'Checking' accounts to 'Savings'.
+3. A user closes their account. Write the exact `DELETE` query to remove `account_id = 10` (Assuming your Foreign Keys use `ON DELETE CASCADE`, what happens to their transactions?).
+4. Fetch the top 5 largest single transactions ever made in the bank, ordered from highest to lowest amount.
+
+### Phase 2: The Aggregation Arena (Math & Buckets)
+
+5. Write a query to calculate the exact total amount of money the bank is currently holding across all accounts.
+6. Write a query to find the average balance for each `account_type`.
+7. Write a query to count exactly how many transactions are currently marked as 'FAILED' in the system.
+8. Group the data to find any `customer_id` that has strictly more than 3 accounts open.
+
+### Phase 3: The Relational Web (JOINs)
+
+9. Write an `INNER JOIN` to display the `name` of the customer alongside their `balance` and `account_type`.
+10. **The Anti-Join:** Write a `LEFT JOIN` to find the names of customers who have registered, but have *never* made a single transaction.
+11. **The 3-Table Join:** Write a single query that returns the Customer's `name`, their `account_type`, and the `amount` of every transaction they have ever made.
+
+### Phase 4: Subqueries (The Inception Layer)
+
+12. Write a query to find the names of customers whose balance is strictly *lower* than the bank's average account balance.
+13. Write a query using a subquery to find the `account_id` that made the single oldest transaction in the database (using `MIN(created_at)`).
+14. Use a subquery in the `WHERE` clause to find all transactions belonging to the customer named "Fatima Khan" without manually looking up her `customer_id` first.
+
+### Phase 5: State Management (ACID Transactions)
+
+15. A customer is transferring ₹1,500 from their Savings to their Checking account. Write the full SQL transaction block (`START TRANSACTION`, the two `UPDATE` statements, and the `COMMIT`).
+16. Imagine you ran the first `UPDATE` in the scenario above, but the database connection crashed before the second `UPDATE`. If you didn't use a transaction block, what state is the bank in right now?
+
+### Phase 6: Architecture & Views (The Java Bridge)
+
+17. Your Java app needs to generate a monthly statement. Create a view named `user_statements` that joins `customers`, `accounts`, and `transactions` to show: `name`, `account_type`, `amount`, and `created_at`.
+18. Write the `SELECT` query your Java application will run to fetch Fatima Khan's statement from that new View.
+
+### Phase 7: The UPI Expansion (System Design)
+
+19. You are upgrading your CLI bank to act as a UPI wrapper. Write the `ALTER TABLE` commands to add a `upi_id` (VARCHAR, must be unique) to the `customers` table, and a `target_upi_id` to the `transactions` table.
+20. Write a massive multi-join query that shows: The Sender's `name`, the Sender's `upi_id`, the `amount` sent, and the Receiver's `upi_id`.
+
